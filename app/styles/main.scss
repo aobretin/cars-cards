@@ -1,0 +1,32 @@
+@import 'vars';
+@import 'typography';
+@import 'helper-classes';
+
+body {
+  font-family: Helvetica, sans-serif;
+  color: $font-color--dark;
+  background-color: $background--light;
+  padding: $half-space;
+}
+
+.card-container.ng-enter,
+.container.ng-enter {
+  transition:0.5s linear all;
+  opacity:0;
+}
+
+/* The finishing CSS styles for the enter animation */
+.card-container.ng-enter.ng-enter-active,
+.container.ng-enter.ng-enter-active {
+  opacity:1;
+}
+
+.card-container.ng-leave {
+  transition:0.5s linear all;
+  opacity:1;
+}
+
+/* The finishing CSS styles for the enter animation */
+.card-container.ng-leave.ng-leave-active {
+  opacity:0;
+}

@@ -1,0 +1,31 @@
+<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">
+  <div class="container">
+    <h1 class="display-3">Cars Cards Collection</h1>
+    <p class="lead">A collection of nice cars that can be filtered, added or deleted</p>
+  </div>
+</div>
+
+<div ng-if="!list.vars.doneLoading" class="container">
+	<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">
+	  <div class="container">
+	    <h1 class="display-3">Loading...</h1>
+	  </div>
+	</div>
+</div>
+
+<div ng-if="list.vars.doneLoading" class="container">
+	<actions-directive></actions-directive>
+	
+	<div class="row">
+		<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : '' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">
+			<list-card-directive 
+				url="item.url"
+				maker="item.maker" 
+				type="item.type" 
+				description="item.description"
+			></list-card-directive>
+		</div>
+	</div>	
+</div>
+
+

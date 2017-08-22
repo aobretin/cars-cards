@@ -1,0 +1,13 @@
+<div style="margin-bottom: 20px">
+	<ul class="nav justify-content-center">
+	  <li class="nav-item">
+	    <select name="maker" class="form-control" ng-model="maker" ng-change="actions.methods.updateMakerFilter(maker)" ng-options="maker for maker in actions.vars.filters.maker">
+	    	<option value="">Please choose maker</option>
+	    </select>
+	  </li>
+
+	  <li class="nav-item ml20">
+	  	<input type="text" placeholder="Type..." ng-model="type" ng-change="actions.methods.updateTypeFilter(type)" class="form-control" />
+	  </li>
+	</ul>
+</div>
