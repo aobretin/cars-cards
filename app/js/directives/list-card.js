@@ -3,11 +3,9 @@ function ListCardDirective() {
     restrict: 'EA',
     replace: true,
     templateUrl: 'directives/list-card.html',
+    controller: 'ListCardCtrl as card',
     scope: {
-      url: '=',
-      maker: '=',
-      type: '=',
-      description: '='
+      item: '='
     }
   };
 }

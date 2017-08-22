@@ -203,13 +203,34 @@ exports.default = controllersModule;
 },{"./actions.js":"C:\\alex\\cards-project\\app\\js\\controllers\\actions.js","./addCard.js":"C:\\alex\\cards-project\\app\\js\\controllers\\addCard.js","./list-card.js":"C:\\alex\\cards-project\\app\\js\\controllers\\list-card.js","./list.js":"C:\\alex\\cards-project\\app\\js\\controllers\\list.js","angular":"C:\\alex\\cards-project\\node_modules\\angular\\index.js"}],"C:\\alex\\cards-project\\app\\js\\controllers\\list-card.js":[function(require,module,exports){
 'use strict';
 
+ListCardCtrl.$inject = ["$timeout", "AppService"];
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-function ListCardCtrl() {
+function ListCardCtrl($timeout, AppService) {
+	'ngInject';
+
 	var vars = {};
 
-	var methods = {};
+	var methods = {
+		deleteCard: function deleteCard(item) {
+			// here we would have a nice ApiService.delete but we will mock again
+
+			var confirm = window.confirm('Are you sure you want to delete this item ?');
+
+			if (confirm) {
+				var data = AppService.data.slice();
+				data.splice(data.indexOf(item), 1);
+
+				AppService.updateData('data', data);
+				AppService.updateData('doneLoading', false);
+
+				$timeout(function () {
+					AppService.updateData('doneLoading', true); // mock a longer request
+				}, 1000);
+			}
+		}
+	};
 
 	this.vars = vars;
 	this.methods = methods;
@@ -345,11 +366,9 @@ function ListCardDirective() {
     restrict: 'EA',
     replace: true,
     templateUrl: 'directives/list-card.html',
+    controller: 'ListCardCtrl as card',
     scope: {
-      url: '=',
-      maker: '=',
-      type: '=',
-      description: '='
+      item: '='
     }
   };
 }
@@ -631,10 +650,10 @@ exports.default = servicesModule;
 'use strict';
 
 angular.module('templates', []).run(['$templateCache', function ($templateCache) {
-  $templateCache.put('list.html', '<div ng-if="!list.vars.doneLoading" class="container">\r\n\t<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">\r\n\t  <div class="container">\r\n\t    <h1 class="display-3">Loading...</h1>\r\n\t  </div>\r\n\t</div>\r\n</div>\r\n\r\n<div ng-if="list.vars.doneLoading" class="container">\r\n\t<actions-directive></actions-directive>\r\n\t\r\n\t<div class="row">\r\n\t\t<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : \'\' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">\r\n\t\t\t<list-card-directive \r\n\t\t\t\turl="item.url"\r\n\t\t\t\tmaker="item.maker" \r\n\t\t\t\ttype="item.type" \r\n\t\t\t\tdescription="item.description"\r\n\t\t\t></list-card-directive>\r\n\t\t</div>\r\n\t</div>\t\r\n</div>\r\n\r\n\r\n');
+  $templateCache.put('list.html', '<div ng-if="!list.vars.doneLoading" class="container">\r\n\t<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">\r\n\t  <div class="container">\r\n\t    <h1 class="display-3">Loading...</h1>\r\n\t  </div>\r\n\t</div>\r\n</div>\r\n\r\n<div ng-if="list.vars.doneLoading" class="container">\r\n\t<actions-directive></actions-directive>\r\n\t\r\n\t<div class="row">\r\n\t\t<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : \'\' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">\r\n\t\t\t<list-card-directive item="item"></list-card-directive>\r\n\t\t</div>\r\n\t</div>\t\r\n</div>\r\n\r\n\r\n');
   $templateCache.put('directives/actions.html', '<div style="margin-bottom: 20px">\r\n\t<ul class="nav justify-content-center">\r\n\t  <li class="nav-item">\r\n\t    <button ng-click="actions.methods.addNewCard()" class="btn btn-success">Add card</button>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t    <select name="maker" class="form-control" ng-model="maker" ng-change="actions.methods.updateMakerFilter(maker)" ng-options="maker for maker in actions.vars.filters.maker">\r\n\t    \t<option value="">Please choose maker</option>\r\n\t    </select>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t  \t<input type="text" placeholder="Type..." ng-model="type" ng-change="actions.methods.updateTypeFilter(type)" class="form-control" />\r\n\t  </li>\r\n\t</ul>\r\n</div>');
   $templateCache.put('directives/add-card.html', '<div class="container">\r\n\t<form ng-submit="add.methods.addNewCard()" name="addNewCard" novalidate>\r\n\t  <div class="form-group" ng-class="{\'has-danger\': addNewCard.maker.$error.pattern}">\r\n\t    <label for="maker">Maker</label>\r\n\t    <input ng-class="{\'form-control-danger\': addNewCard.maker.$error.pattern}" ng-model="add.vars.formData.maker.value" name="maker" type="text" class="form-control" id="maker" placeholder="Enter maker" ng-pattern="add.vars.formData.maker.REGEX" required>\r\n\t    <div ng-show="addNewCard.maker.$error.pattern" class="form-control-feedback">Please use only letters</div>\r\n\t  </div>\r\n\t  <div class="form-group">\r\n\t    <label for="type">Type</label>\r\n\t    <input ng-model="add.vars.formData.maker.type" type="text" class="form-control" id="type" placeholder="Enter type" required>\r\n\t  </div>\r\n\t  <div class="form-group">\r\n\t    <label for="description">Example textarea</label>\r\n\t    <textarea ng-model="add.vars.formData.maker.description" class="form-control" id="description" rows="3" placeholder="Enter description (optional)"></textarea>\r\n\t  </div>\r\n\t  <label class="custom-file">\r\n\t  \t<input type="file">\r\n\t  </label>\r\n\t  \r\n\t  <div class="col-sm-12 mt20 p0">\r\n\t\t  <button ng-disabled="addNewCard.$invalid" type="submit" class="btn btn-primary">Submit</button>\r\n\t\t  <button ng-click="add.methods.cancelAdd()" type="button" class="btn btn-default ml20">Cancel</button>\r\n\t  </div>\r\n\t</form>\r\n</div>');
-  $templateCache.put('directives/list-card.html', '<div class="card mb20">\r\n  <img class="card-img-top" ng-src="{{url && url.length ? url : \'/images/no-image.jpg\' }}" alt="{{maker + \' \' + type}}">\r\n  <div class="card-block">\r\n    <h4 class="card-title">Maker: {{maker}}</h4>\r\n    <h5 class="card-title">Type: {{type}}</h5>\r\n    <!-- <p ng-show="description" class="card-text">Description: {{description}}</p> -->\r\n    <a href="#" class="btn btn-primary pull-left">View details</a>\r\n    <a href="#" class="btn btn-danger pull-right">Delete</a>\r\n  </div>\r\n</div>');
+  $templateCache.put('directives/list-card.html', '<div class="card mb20">\r\n  <img class="card-img-top" ng-src="{{item.url && item.url.length ? item.url : \'/images/no-image.jpg\' }}" alt="{{item.maker + \' \' + item.type}}">\r\n  <div class="card-block">\r\n    <h4 class="card-title">Maker: {{item.maker}}</h4>\r\n    <h5 class="card-title">Type: {{item.type}}</h5>\r\n    <!-- <p ng-show="description" class="card-text">Description: {{item.description}}</p> -->\r\n    <a href="#" class="btn btn-primary pull-left">View details</a>\r\n    <a ng-click="card.methods.deleteCard(item)" href="#" class="btn btn-danger pull-right">Delete</a>\r\n  </div>\r\n</div>');
 }]);
 
 },{}],"C:\\alex\\cards-project\\node_modules\\angular-animate\\angular-animate.js":[function(require,module,exports){
