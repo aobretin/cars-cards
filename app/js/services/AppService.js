@@ -5,6 +5,8 @@ function AppService($rootScope) {
     data: [],
     maker: undefined,
     type: undefined,
+    doneLoading: false,
+    
     updateData: function(key, value) {
       service[key] = value;
 

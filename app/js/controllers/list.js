@@ -5,7 +5,7 @@ function ListCtrl($rootScope, $timeout, ApiService, AppService, AppSettings) {
 		data: AppService.data,
 		maker: AppService.maker,
 		type: AppService.type,
-		doneLoading: false
+		doneLoading: AppService.doneLoading
 	}
 
 	const methods = {
@@ -14,20 +14,28 @@ function ListCtrl($rootScope, $timeout, ApiService, AppService, AppSettings) {
 
 	// we init the list and will be using this method later to refresh the list
 	function initList() {
-		// mock the request with a promise
-		ApiService.get(AppSettings.CARDS_JSON_MOCK).then(function(res) {
-			AppService.updateData('data', res);
+		// so that the list does not reuse the constant
+		if (vars.data.length === 0) {
+			// mock the request with a promise
+			ApiService.get(AppSettings.CARDS_JSON_MOCK).then(function(res) {
+				AppService.updateData('data', res);
 
+				$timeout(function() {
+					AppService.updateData('doneLoading', true); // mock a longer request
+				}, 1000);
+			})
+		} else {
 			$timeout(function() {
-				vars.doneLoading = true; // mock a longer request
+				AppService.updateData('doneLoading', true); // mock a longer request
 			}, 1000);
-		})
+		}
 	}
 
 	$rootScope.$on('APP_SERVICE_UPDATED', function(e, service) {
 		vars.maker = service.maker;
 		vars.type = service.type;
 		vars.data = service.data;
+		vars.doneLoading = service.doneLoading;
 	});
 
 	initList();

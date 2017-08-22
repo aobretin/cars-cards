@@ -1,4 +1,4 @@
-function ActionsCtrl(AppService) {
+function ActionsCtrl($state, AppService,) {
 	'ngInject'
 
 	const vars = {
@@ -8,6 +8,9 @@ function ActionsCtrl(AppService) {
 	}
 
 	const methods = {
+		addNewCard: function() {
+			$state.go('AddCard');
+		},
 		updateMakerFilter: function(maker) {
 			AppService.updateData('maker', maker);
 		},

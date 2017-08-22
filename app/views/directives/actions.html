@@ -1,6 +1,10 @@
 <div style="margin-bottom: 20px">
 	<ul class="nav justify-content-center">
 	  <li class="nav-item">
+	    <button ng-click="actions.methods.addNewCard()" class="btn btn-success">Add card</button>
+	  </li>
+
+	  <li class="nav-item ml20">
 	    <select name="maker" class="form-control" ng-model="maker" ng-change="actions.methods.updateMakerFilter(maker)" ng-options="maker for maker in actions.vars.filters.maker">
 	    	<option value="">Please choose maker</option>
 	    </select>

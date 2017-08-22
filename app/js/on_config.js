@@ -16,6 +16,12 @@ function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compil
     controller: 'ListCtrl as list',
     templateUrl: 'list.html',
     title: 'Cards list'
+  })
+  .state('AddCard', {
+    url: '/add-card',
+    controller: 'AddCardCtrl as add',
+    templateUrl: 'directives/add-card.html',
+    title: 'Add New Card'
   });
 
   $urlRouterProvider.otherwise('/');

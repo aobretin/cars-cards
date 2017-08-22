@@ -1,0 +1,25 @@
+<div class="container">
+	<form ng-submit="add.methods.addNewCard()" name="addNewCard" novalidate>
+	  <div class="form-group" ng-class="{'has-danger': addNewCard.maker.$error.pattern}">
+	    <label for="maker">Maker</label>
+	    <input ng-class="{'form-control-danger': addNewCard.maker.$error.pattern}" ng-model="add.vars.formData.maker.value" name="maker" type="text" class="form-control" id="maker" placeholder="Enter maker" ng-pattern="add.vars.formData.maker.REGEX" required>
+	    <div ng-show="addNewCard.maker.$error.pattern" class="form-control-feedback">Please use only letters</div>
+	  </div>
+	  <div class="form-group">
+	    <label for="type">Type</label>
+	    <input ng-model="add.vars.formData.maker.type" type="text" class="form-control" id="type" placeholder="Enter type" required>
+	  </div>
+	  <div class="form-group">
+	    <label for="description">Example textarea</label>
+	    <textarea ng-model="add.vars.formData.maker.description" class="form-control" id="description" rows="3" placeholder="Enter description (optional)"></textarea>
+	  </div>
+	  <label class="custom-file">
+	  	<input type="file">
+	  </label>
+	  
+	  <div class="col-sm-12 mt20 p0">
+		  <button ng-disabled="addNewCard.$invalid" type="submit" class="btn btn-primary">Submit</button>
+		  <button ng-click="add.methods.cancelAdd()" type="button" class="btn btn-default ml20">Cancel</button>
+	  </div>
+	</form>
+</div>
