@@ -9,6 +9,10 @@ body {
   padding: $half-space;
 }
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 .card-container.ng-enter,
 .container.ng-enter,
 ui-view.ng-enter {

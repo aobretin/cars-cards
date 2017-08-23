@@ -8,8 +8,12 @@
 
 <div ng-if="list.vars.doneLoading" class="container">
 	<actions-directive></actions-directive>
+
+	<div ng-if="!list.vars.data.length" class="row text-center">
+		<h1 style="width: 100%">{{'NO_CARDS' | translate}}</h1>
+	</div>
 	
-	<div class="row">
+	<div ng-if="list.vars.data.length" class="row">
 		<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : '' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">
 			<list-card-directive item="item"></list-card-directive>
 		</div>

@@ -150,8 +150,9 @@ function AddCardCtrl($state, AppService) {
 			// here we should create a post with ApiService.post
 			var data = AppService.data.slice();
 
+			// we add a dummy card
 			data.unshift({
-				"id": data.length + 1,
+				"id": data.length + 1, // so we can always have a unique id
 				"url": '',
 				"maker": vars.formData.maker.value,
 				"type": vars.formData.maker.type,
@@ -206,8 +207,6 @@ function CardDetailsCtrl($stateParams, $state, AppService, AppSettings) {
 	function checkIfNeedToRedirect(foundCard) {
 		return foundCard === null ? $state.go('List') : foundCard;
 	}
-
-	console.log(vars.card);
 
 	this.vars = vars;
 	this.methods = methods;
@@ -337,6 +336,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 function ListCtrl($rootScope, $timeout, ApiService, AppService, AppSettings) {
 	'ngInject';
+
+	// original data can be found in constants.js
 
 	var vars = {
 		data: AppService.data,
@@ -614,9 +615,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compileProvider, $translateProvider) {
   'ngInject';
 
+  var DEFAULT_LANG = 'en';
+
   if ("development" === 'production') {
     $compileProvider.debugInfoEnabled(false);
   }
+
+  // we register dynamically all the languages available in translation.js
 
   Object.keys(_translations2.default).forEach(function (language) {
     $translateProvider.translations(language, _translations2.default[language]);
@@ -624,7 +629,7 @@ function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compil
 
   $translateProvider.registerAvailableLanguageKeys(Object.keys(_translations2.default));
 
-  $translateProvider.preferredLanguage('en').fallbackLanguage('en');
+  $translateProvider.preferredLanguage(DEFAULT_LANG).fallbackLanguage(DEFAULT_LANG);
 
   $locationProvider.html5Mode({
     enabled: true,
@@ -689,6 +694,9 @@ Object.defineProperty(exports, "__esModule", {
 function ApiService($http) {
   'ngInject';
 
+  // this would normally hold the get post delete patch methods but for this app we will use 
+  // a mock Promise that return the data
+
   var service = {
     get: function get(data) {
       return new Promise(function (resolve, reject) {
@@ -715,6 +723,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 function AppService($rootScope) {
   'ngInject';
+
+  // we are going to use a service to keep the state of the data and state of the app and
+  // notify where needed about changes
 
   var service = {
     data: [],
@@ -780,7 +791,7 @@ exports.default = servicesModule;
 'use strict';
 
 angular.module('templates', []).run(['$templateCache', function ($templateCache) {
-  $templateCache.put('list.html', '<div ng-if="!list.vars.doneLoading" class="container">\r\n\t<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">\r\n\t  <div class="container">\r\n\t    <h1 class="display-3">Loading...</h1>\r\n\t  </div>\r\n\t</div>\r\n</div>\r\n\r\n<div ng-if="list.vars.doneLoading" class="container">\r\n\t<actions-directive></actions-directive>\r\n\t\r\n\t<div class="row">\r\n\t\t<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : \'\' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">\r\n\t\t\t<list-card-directive item="item"></list-card-directive>\r\n\t\t</div>\r\n\t</div>\t\r\n</div>\r\n\r\n\r\n');
+  $templateCache.put('list.html', '<div ng-if="!list.vars.doneLoading" class="container">\r\n\t<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">\r\n\t  <div class="container">\r\n\t    <h1 class="display-3">Loading...</h1>\r\n\t  </div>\r\n\t</div>\r\n</div>\r\n\r\n<div ng-if="list.vars.doneLoading" class="container">\r\n\t<actions-directive></actions-directive>\r\n\r\n\t<div ng-if="!list.vars.data.length" class="row text-center">\r\n\t\t<h1 style="width: 100%">{{\'NO_CARDS\' | translate}}</h1>\r\n\t</div>\r\n\t\r\n\t<div ng-if="list.vars.data.length" class="row">\r\n\t\t<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : \'\' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">\r\n\t\t\t<list-card-directive item="item"></list-card-directive>\r\n\t\t</div>\r\n\t</div>\t\r\n</div>\r\n\r\n\r\n');
   $templateCache.put('directives/actions.html', '<div style="margin-bottom: 20px">\r\n\t<ul class="nav justify-content-center">\r\n\t  <li class="nav-item">\r\n\t    <button ng-click="actions.methods.addNewCard()" class="btn btn-success">{{\'ADD_CARD_BTN\' | translate}}</button>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t    <select name="maker" class="form-control" ng-model="maker" ng-change="actions.methods.updateMakerFilter(maker)" ng-options="maker for maker in actions.vars.filters.maker">\r\n\t    \t<option value="">{{\'MAKER_FILTER\' | translate}}</option>\r\n\t    </select>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t  \t<input type="text" placeholder="{{\'TYPE_FILTER\' | translate}}" ng-model="type" ng-change="actions.methods.updateTypeFilter(type)" class="form-control" />\r\n\t  </li>\r\n\t</ul>\r\n</div>');
   $templateCache.put('directives/add-card.html', '<div class="container">\r\n\t<form ng-submit="add.methods.addNewCard()" name="addNewCard" novalidate>\r\n\t  <div class="form-group" ng-class="{\'has-danger\': addNewCard.maker.$error.pattern}">\r\n\t    <label for="maker">Maker</label>\r\n\t    <input ng-class="{\'form-control-danger\': addNewCard.maker.$error.pattern}" ng-model="add.vars.formData.maker.value" name="maker" type="text" class="form-control" id="maker" placeholder="Enter maker" ng-pattern="add.vars.formData.maker.REGEX" required>\r\n\t    <div ng-show="addNewCard.maker.$error.pattern" class="form-control-feedback">Please use only letters</div>\r\n\t  </div>\r\n\t  <div class="form-group">\r\n\t    <label for="type">Type</label>\r\n\t    <input ng-model="add.vars.formData.maker.type" type="text" class="form-control" id="type" placeholder="Enter type" required>\r\n\t  </div>\r\n\t  <div class="form-group">\r\n\t    <label for="description">Example textarea</label>\r\n\t    <textarea ng-model="add.vars.formData.maker.description" class="form-control" id="description" rows="3" placeholder="Enter description (optional)"></textarea>\r\n\t  </div>\r\n\t  <label class="custom-file">\r\n\t  \t<input type="file">\r\n\t  </label>\r\n\t  \r\n\t  <div class="col-sm-12 mt20 p0">\r\n\t\t  <button ng-disabled="addNewCard.$invalid" type="submit" class="btn btn-primary">Submit</button>\r\n\t\t  <button ng-click="add.methods.cancelAdd()" type="button" class="btn btn-default ml20">Cancel</button>\r\n\t  </div>\r\n\t</form>\r\n</div>');
   $templateCache.put('directives/card-details.html', '<div class="container">\r\n\t<div class="card">\r\n\t  <div class="card-header text-center">\r\n\t    <strong>Details for {{details.vars.card.maker}} - {{details.vars.card.type}}</strong>\r\n\t  </div>\r\n\t  <img class="card-img-top" ng-src="{{details.vars.card.url && details.vars.card.url.length ? details.vars.card.url : \'/images/no-image.jpg\'}}" alt="Card image cap">\r\n\t  <div class="card-block">\r\n\t    <h3 class="card-title">Sorry for the bad image quality</h3>\r\n\t    <h4 class="card-title"><strong>{{\'MAKER_LABEL\' | translate}}:</strong> {{details.vars.card.maker}}</h4>\r\n    \t<h5 class="card-title"><strong>{{\'TYPE_LABEL\' | translate}}:</strong> {{details.vars.card.type}}</h5>\r\n    \t<p ng-show="details.vars.card.description" class="card-text"><strong>{{\'DESCRIPTION_LABEL\' | translate}}:</strong> {{details.vars.card.description}}</p>\r\n    \t<p ng-show="!details.vars.card.description" class="card-text">{{\'NO_DESC\' | translate}}</p>\r\n   \t\t<a ui-sref="List" href="#" class="btn btn-danger">{{\'BACK_BTN\' | translate}}</a>\r\n\t  </div>\r\n\t</div>\r\n</div>');
@@ -808,7 +819,8 @@ var languages = {
 		VIEW_DETAILS_BTN: 'View details',
 		DELETE_BTN: 'Delete',
 		BACK_BTN: 'Back',
-		NO_DESC: 'No description available'
+		NO_DESC: 'No description available',
+		NO_CARDS: 'No available cards... Please add one'
 	},
 	fr: {
 		LANGUAGE_LABEL: 'La langue: ',
@@ -823,7 +835,8 @@ var languages = {
 		VIEW_DETAILS_BTN: 'Voir les détails',
 		DELETE_BTN: 'Effacer',
 		BACK_BTN: 'Arrière',
-		NO_DESC: 'Pas de description disponible'
+		NO_DESC: 'Pas de description disponible',
+		NO_CARDS: 'Pas de cartes disponibles ... Ajoutez une'
 	}
 };
 

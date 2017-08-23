@@ -12,7 +12,8 @@ const languages = {
 		VIEW_DETAILS_BTN: 'View details',
 		DELETE_BTN: 'Delete',
 		BACK_BTN: 'Back',
-		NO_DESC: 'No description available'
+		NO_DESC: 'No description available',
+		NO_CARDS: 'No available cards... Please add one'
 	},
 	fr: {
 		LANGUAGE_LABEL: 'La langue: ',
@@ -27,7 +28,8 @@ const languages = {
 		VIEW_DETAILS_BTN: 'Voir les détails',
 		DELETE_BTN: 'Effacer',
 		BACK_BTN: 'Arrière',
-		NO_DESC: 'Pas de description disponible'
+		NO_DESC: 'Pas de description disponible',
+		NO_CARDS: 'Pas de cartes disponibles ... Ajoutez une'
 	}
 }
 
