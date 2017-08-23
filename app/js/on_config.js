@@ -11,7 +11,9 @@ function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compil
     $translateProvider.translations(language, translations[language]);
   });
 
-  $translateProvider.preferredLanguage('en');
+  $translateProvider.registerAvailableLanguageKeys(Object.keys(translations));
+
+  $translateProvider.preferredLanguage('en').fallbackLanguage('en');
 
   $locationProvider.html5Mode({
     enabled: true,

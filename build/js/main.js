@@ -233,7 +233,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 var controllersModule = _angular2.default.module('app.controllers', []);
-var controllers = ({"actions":require("./actions.js"),"addCard":require("./addCard.js"),"cardDetails":require("./cardDetails.js"),"list-card":require("./list-card.js"),"list":require("./list.js")});
+var controllers = ({"actions":require("./actions.js"),"addCard":require("./addCard.js"),"cardDetails":require("./cardDetails.js"),"languageSelector":require("./languageSelector.js"),"list-card":require("./list-card.js"),"list":require("./list.js")});
 
 function declare(controllerMap) {
   Object.keys(controllerMap).forEach(function (key) {
@@ -255,7 +255,39 @@ declare(controllers);
 
 exports.default = controllersModule;
 
-},{"./actions.js":"C:\\alex\\cards-project\\app\\js\\controllers\\actions.js","./addCard.js":"C:\\alex\\cards-project\\app\\js\\controllers\\addCard.js","./cardDetails.js":"C:\\alex\\cards-project\\app\\js\\controllers\\cardDetails.js","./list-card.js":"C:\\alex\\cards-project\\app\\js\\controllers\\list-card.js","./list.js":"C:\\alex\\cards-project\\app\\js\\controllers\\list.js","angular":"C:\\alex\\cards-project\\node_modules\\angular\\index.js"}],"C:\\alex\\cards-project\\app\\js\\controllers\\list-card.js":[function(require,module,exports){
+},{"./actions.js":"C:\\alex\\cards-project\\app\\js\\controllers\\actions.js","./addCard.js":"C:\\alex\\cards-project\\app\\js\\controllers\\addCard.js","./cardDetails.js":"C:\\alex\\cards-project\\app\\js\\controllers\\cardDetails.js","./languageSelector.js":"C:\\alex\\cards-project\\app\\js\\controllers\\languageSelector.js","./list-card.js":"C:\\alex\\cards-project\\app\\js\\controllers\\list-card.js","./list.js":"C:\\alex\\cards-project\\app\\js\\controllers\\list.js","angular":"C:\\alex\\cards-project\\node_modules\\angular\\index.js"}],"C:\\alex\\cards-project\\app\\js\\controllers\\languageSelector.js":[function(require,module,exports){
+'use strict';
+
+LanguageSelectorCtrl.$inject = ["$translate"];
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+function LanguageSelectorCtrl($translate) {
+	'ngInject';
+
+	var AVAILABLE_LANGUAGES = $translate.getAvailableLanguageKeys();
+
+	var vars = {
+		languages: AVAILABLE_LANGUAGES,
+		selectedLanguage: AVAILABLE_LANGUAGES[0]
+	};
+
+	var methods = {
+		changeLanguage: function changeLanguage(lang) {
+			$translate.use(lang);
+		}
+	};
+
+	this.vars = vars;
+	this.methods = methods;
+}
+
+exports.default = {
+	name: 'LanguageSelectorCtrl',
+	fn: LanguageSelectorCtrl
+};
+
+},{}],"C:\\alex\\cards-project\\app\\js\\controllers\\list-card.js":[function(require,module,exports){
 'use strict';
 
 ListCardCtrl.$inject = ["$timeout", "AppService"];
@@ -388,7 +420,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 var directivesModule = _angular2.default.module('app.directives', []);
-var directives = ({"action":require("./action.js"),"list-card":require("./list-card.js")});
+var directives = ({"action":require("./action.js"),"languageSelector":require("./languageSelector.js"),"list-card":require("./list-card.js")});
 
 function declare(directiveMap) {
   Object.keys(directiveMap).forEach(function (key) {
@@ -410,7 +442,28 @@ declare(directives);
 
 exports.default = directivesModule;
 
-},{"./action.js":"C:\\alex\\cards-project\\app\\js\\directives\\action.js","./list-card.js":"C:\\alex\\cards-project\\app\\js\\directives\\list-card.js","angular":"C:\\alex\\cards-project\\node_modules\\angular\\index.js"}],"C:\\alex\\cards-project\\app\\js\\directives\\list-card.js":[function(require,module,exports){
+},{"./action.js":"C:\\alex\\cards-project\\app\\js\\directives\\action.js","./languageSelector.js":"C:\\alex\\cards-project\\app\\js\\directives\\languageSelector.js","./list-card.js":"C:\\alex\\cards-project\\app\\js\\directives\\list-card.js","angular":"C:\\alex\\cards-project\\node_modules\\angular\\index.js"}],"C:\\alex\\cards-project\\app\\js\\directives\\languageSelector.js":[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function LanguageSelectorDirective() {
+  return {
+    restrict: 'EA',
+    replace: true,
+    templateUrl: 'directives/language-selector.html',
+    controller: 'LanguageSelectorCtrl as language',
+    scope: {}
+  };
+}
+
+exports.default = {
+  name: 'languageSelectorDirective',
+  fn: LanguageSelectorDirective
+};
+
+},{}],"C:\\alex\\cards-project\\app\\js\\directives\\list-card.js":[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -569,7 +622,9 @@ function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compil
     $translateProvider.translations(language, _translations2.default[language]);
   });
 
-  $translateProvider.preferredLanguage('en');
+  $translateProvider.registerAvailableLanguageKeys(Object.keys(_translations2.default));
+
+  $translateProvider.preferredLanguage('en').fallbackLanguage('en');
 
   $locationProvider.html5Mode({
     enabled: true,
@@ -725,11 +780,12 @@ exports.default = servicesModule;
 'use strict';
 
 angular.module('templates', []).run(['$templateCache', function ($templateCache) {
-  $templateCache.put('list.html', '<div ng-if="!list.vars.doneLoading" class="container">\r\n\t<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">\r\n\t  <div class="container">\r\n\t    <h1 class="display-3">Loading...</h1>\r\n\t  </div>\r\n\t</div>\r\n</div>\r\n\r\n<div>{{\'GREETING\' | translate}}</div>\r\n\r\n<div ng-if="list.vars.doneLoading" class="container">\r\n\t<actions-directive></actions-directive>\r\n\t\r\n\t<div class="row">\r\n\t\t<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : \'\' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">\r\n\t\t\t<list-card-directive item="item"></list-card-directive>\r\n\t\t</div>\r\n\t</div>\t\r\n</div>\r\n\r\n\r\n');
-  $templateCache.put('directives/actions.html', '<div style="margin-bottom: 20px">\r\n\t<ul class="nav justify-content-center">\r\n\t  <li class="nav-item">\r\n\t    <button ng-click="actions.methods.addNewCard()" class="btn btn-success">Add card</button>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t    <select name="maker" class="form-control" ng-model="maker" ng-change="actions.methods.updateMakerFilter(maker)" ng-options="maker for maker in actions.vars.filters.maker">\r\n\t    \t<option value="">Please choose maker</option>\r\n\t    </select>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t  \t<input type="text" placeholder="Type..." ng-model="type" ng-change="actions.methods.updateTypeFilter(type)" class="form-control" />\r\n\t  </li>\r\n\t</ul>\r\n</div>');
+  $templateCache.put('list.html', '<div ng-if="!list.vars.doneLoading" class="container">\r\n\t<div class="jumbotron jumbotron-fluid text-center" style="padding: 2rem; margin: 0">\r\n\t  <div class="container">\r\n\t    <h1 class="display-3">Loading...</h1>\r\n\t  </div>\r\n\t</div>\r\n</div>\r\n\r\n<div ng-if="list.vars.doneLoading" class="container">\r\n\t<actions-directive></actions-directive>\r\n\t\r\n\t<div class="row">\r\n\t\t<div ng-repeat="item in list.vars.data | filter:list.vars.type | filter:list.vars.maker ? list.vars.maker : \'\' track by $index" class="card-container col-sm-12 col-md-6 col-lg-4">\r\n\t\t\t<list-card-directive item="item"></list-card-directive>\r\n\t\t</div>\r\n\t</div>\t\r\n</div>\r\n\r\n\r\n');
+  $templateCache.put('directives/actions.html', '<div style="margin-bottom: 20px">\r\n\t<ul class="nav justify-content-center">\r\n\t  <li class="nav-item">\r\n\t    <button ng-click="actions.methods.addNewCard()" class="btn btn-success">{{\'ADD_CARD_BTN\' | translate}}</button>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t    <select name="maker" class="form-control" ng-model="maker" ng-change="actions.methods.updateMakerFilter(maker)" ng-options="maker for maker in actions.vars.filters.maker">\r\n\t    \t<option value="">{{\'MAKER_FILTER\' | translate}}</option>\r\n\t    </select>\r\n\t  </li>\r\n\r\n\t  <li class="nav-item ml20">\r\n\t  \t<input type="text" placeholder="{{\'TYPE_FILTER\' | translate}}" ng-model="type" ng-change="actions.methods.updateTypeFilter(type)" class="form-control" />\r\n\t  </li>\r\n\t</ul>\r\n</div>');
   $templateCache.put('directives/add-card.html', '<div class="container">\r\n\t<form ng-submit="add.methods.addNewCard()" name="addNewCard" novalidate>\r\n\t  <div class="form-group" ng-class="{\'has-danger\': addNewCard.maker.$error.pattern}">\r\n\t    <label for="maker">Maker</label>\r\n\t    <input ng-class="{\'form-control-danger\': addNewCard.maker.$error.pattern}" ng-model="add.vars.formData.maker.value" name="maker" type="text" class="form-control" id="maker" placeholder="Enter maker" ng-pattern="add.vars.formData.maker.REGEX" required>\r\n\t    <div ng-show="addNewCard.maker.$error.pattern" class="form-control-feedback">Please use only letters</div>\r\n\t  </div>\r\n\t  <div class="form-group">\r\n\t    <label for="type">Type</label>\r\n\t    <input ng-model="add.vars.formData.maker.type" type="text" class="form-control" id="type" placeholder="Enter type" required>\r\n\t  </div>\r\n\t  <div class="form-group">\r\n\t    <label for="description">Example textarea</label>\r\n\t    <textarea ng-model="add.vars.formData.maker.description" class="form-control" id="description" rows="3" placeholder="Enter description (optional)"></textarea>\r\n\t  </div>\r\n\t  <label class="custom-file">\r\n\t  \t<input type="file">\r\n\t  </label>\r\n\t  \r\n\t  <div class="col-sm-12 mt20 p0">\r\n\t\t  <button ng-disabled="addNewCard.$invalid" type="submit" class="btn btn-primary">Submit</button>\r\n\t\t  <button ng-click="add.methods.cancelAdd()" type="button" class="btn btn-default ml20">Cancel</button>\r\n\t  </div>\r\n\t</form>\r\n</div>');
-  $templateCache.put('directives/card-details.html', '<div class="container">\r\n\t<div class="card">\r\n\t  <div class="card-header text-center">\r\n\t    <strong>Details for {{details.vars.card.maker}} - {{details.vars.card.type}}</strong>\r\n\t  </div>\r\n\t  <img class="card-img-top" ng-src="{{details.vars.card.url && details.vars.card.url.length ? details.vars.card.url : \'/images/no-image.jpg\'}}" alt="Card image cap">\r\n\t  <div class="card-block">\r\n\t    <h3 class="card-title">Sorry for the bad image quality</h3>\r\n\t    <h4 class="card-title"><strong>Maker:</strong> {{details.vars.card.maker}}</h4>\r\n    \t<h5 class="card-title"><strong>Type:</strong> {{details.vars.card.type}}</h5>\r\n    \t<p ng-show="details.vars.card.description" class="card-text"><strong>Description:</strong> {{details.vars.card.description}}</p>\r\n    \t<p ng-show="!details.vars.card.description" class="card-text">No description available</p>\r\n   \t\t<a ui-sref="List" href="#" class="btn btn-danger">Back</a>\r\n\t  </div>\r\n\t</div>\r\n</div>');
-  $templateCache.put('directives/list-card.html', '<div class="card mb20">\r\n  <img class="card-img-top" ng-src="{{item.url && item.url.length ? item.url : \'/images/no-image.jpg\'}}" alt="{{item.maker + \' \' + item.type}}">\r\n  <div class="card-block">\r\n    <h4 class="card-title">Maker: {{item.maker}}</h4>\r\n    <h5 class="card-title">Type: {{item.type}}</h5>\r\n    <!-- <p ng-show="description" class="card-text">Description: {{item.description}}</p> -->\r\n    <a href="#" ui-sref="CardDetails({id: item.id})" class="btn btn-primary pull-left">View details</a>\r\n    <a ng-click="card.methods.deleteCard(item)" href="#" class="btn btn-danger pull-right">Delete</a>\r\n  </div>\r\n</div>');
+  $templateCache.put('directives/card-details.html', '<div class="container">\r\n\t<div class="card">\r\n\t  <div class="card-header text-center">\r\n\t    <strong>Details for {{details.vars.card.maker}} - {{details.vars.card.type}}</strong>\r\n\t  </div>\r\n\t  <img class="card-img-top" ng-src="{{details.vars.card.url && details.vars.card.url.length ? details.vars.card.url : \'/images/no-image.jpg\'}}" alt="Card image cap">\r\n\t  <div class="card-block">\r\n\t    <h3 class="card-title">Sorry for the bad image quality</h3>\r\n\t    <h4 class="card-title"><strong>{{\'MAKER_LABEL\' | translate}}:</strong> {{details.vars.card.maker}}</h4>\r\n    \t<h5 class="card-title"><strong>{{\'TYPE_LABEL\' | translate}}:</strong> {{details.vars.card.type}}</h5>\r\n    \t<p ng-show="details.vars.card.description" class="card-text"><strong>{{\'DESCRIPTION_LABEL\' | translate}}:</strong> {{details.vars.card.description}}</p>\r\n    \t<p ng-show="!details.vars.card.description" class="card-text">{{\'NO_DESC\' | translate}}</p>\r\n   \t\t<a ui-sref="List" href="#" class="btn btn-danger">{{\'BACK_BTN\' | translate}}</a>\r\n\t  </div>\r\n\t</div>\r\n</div>');
+  $templateCache.put('directives/language-selector.html', '<div class="text-center">\r\n\t<span style="display: inline-block;"><strong>{{\'LANGUAGE_LABEL\' | translate}}</strong></span>\r\n\t<select \r\n\t\tstyle="width: 200px; display: inline-block;" \r\n\t\tng-model="language.vars.selectedLanguage" \r\n\t\tname="language-selector" \r\n\t\tclass="form-control" \r\n\t\tng-change="language.methods.changeLanguage(language.vars.selectedLanguage)"\r\n\t\tng-options="lang for lang in language.vars.languages"></select>\r\n</div>');
+  $templateCache.put('directives/list-card.html', '<div class="card mb20">\r\n  <img class="card-img-top" ng-src="{{item.url && item.url.length ? item.url : \'/images/no-image.jpg\'}}" alt="{{item.maker + \' \' + item.type}}">\r\n  <div class="card-block">\r\n    <h4 class="card-title">{{\'MAKER_LABEL\' | translate}}: {{item.maker}}</h4>\r\n    <h5 class="card-title">{{\'TYPE_LABEL\' | translate}}: {{item.type}}</h5>\r\n    <!-- <p ng-show="description" class="card-text">Description: {{item.description}}</p> -->\r\n    <a href="#" ui-sref="CardDetails({id: item.id})" class="btn btn-primary pull-left">{{\'VIEW_DETAILS_BTN\' | translate}}</a>\r\n    <a ng-click="card.methods.deleteCard(item)" href="#" class="btn btn-danger pull-right">{{\'DELETE_BTN\' | translate}}</a>\r\n  </div>\r\n</div>');
 }]);
 
 },{}],"C:\\alex\\cards-project\\app\\js\\translations.js":[function(require,module,exports){
@@ -740,10 +796,34 @@ Object.defineProperty(exports, "__esModule", {
 });
 var languages = {
 	en: {
-		GREETING: 'Hello world!'
+		LANGUAGE_LABEL: 'Language: ',
+		APP_TITLE: 'Cars Cards Collection',
+		APP_DESCRIPTION: 'A collection of nice cars that can be filtered, added or deleted',
+		ADD_CARD_BTN: 'Add card',
+		MAKER_FILTER: 'Please choose maker',
+		TYPE_FILTER: 'Type...',
+		MAKER_LABEL: 'Maker',
+		TYPE_LABEL: 'Type',
+		DESCRIPTION_LABEL: 'Description',
+		VIEW_DETAILS_BTN: 'View details',
+		DELETE_BTN: 'Delete',
+		BACK_BTN: 'Back',
+		NO_DESC: 'No description available'
 	},
 	fr: {
-		GREETING: 'Omlette du fromage'
+		LANGUAGE_LABEL: 'La langue: ',
+		APP_TITLE: 'Collection de cartes de voitures',
+		APP_DESCRIPTION: 'Une collection de belles voitures qui peuvent être filtrées, ajoutées ou supprimées',
+		ADD_CARD_BTN: 'Ajouter une carte',
+		MAKER_FILTER: 'Veuillez choisir le fabricant',
+		TYPE_FILTER: 'Type...',
+		MAKER_LABEL: 'Le fabricant',
+		TYPE_LABEL: 'Type',
+		DESCRIPTION_LABEL: 'La description',
+		VIEW_DETAILS_BTN: 'Voir les détails',
+		DELETE_BTN: 'Effacer',
+		BACK_BTN: 'Arrière',
+		NO_DESC: 'Pas de description disponible'
 	}
 };
 

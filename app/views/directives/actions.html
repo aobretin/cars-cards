@@ -1,17 +1,17 @@
 <div style="margin-bottom: 20px">
 	<ul class="nav justify-content-center">
 	  <li class="nav-item">
-	    <button ng-click="actions.methods.addNewCard()" class="btn btn-success">Add card</button>
+	    <button ng-click="actions.methods.addNewCard()" class="btn btn-success">{{'ADD_CARD_BTN' | translate}}</button>
 	  </li>
 
 	  <li class="nav-item ml20">
 	    <select name="maker" class="form-control" ng-model="maker" ng-change="actions.methods.updateMakerFilter(maker)" ng-options="maker for maker in actions.vars.filters.maker">
-	    	<option value="">Please choose maker</option>
+	    	<option value="">{{'MAKER_FILTER' | translate}}</option>
 	    </select>
 	  </li>
 
 	  <li class="nav-item ml20">
-	  	<input type="text" placeholder="Type..." ng-model="type" ng-change="actions.methods.updateTypeFilter(type)" class="form-control" />
+	  	<input type="text" placeholder="{{'TYPE_FILTER' | translate}}" ng-model="type" ng-change="actions.methods.updateTypeFilter(type)" class="form-control" />
 	  </li>
 	</ul>
 </div>
