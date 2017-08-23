@@ -1,9 +1,17 @@
-function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compileProvider) {
+import translations from './translations';
+
+function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compileProvider, $translateProvider) {
   'ngInject';
 
   if (process.env.NODE_ENV === 'production') {
     $compileProvider.debugInfoEnabled(false);
   }
+
+  Object.keys(translations).forEach(function(language) {
+    $translateProvider.translations(language, translations[language]);
+  });
+
+  $translateProvider.preferredLanguage('en');
 
   $locationProvider.html5Mode({
     enabled: true,
@@ -21,7 +29,13 @@ function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compil
     url: '/add-card',
     controller: 'AddCardCtrl as add',
     templateUrl: 'directives/add-card.html',
-    title: 'Add New Card'
+    title: 'Add new card'
+  })
+  .state('CardDetails', {
+    url: '/card-details?id',
+    controller: 'CardDetailsCtrl as details',
+    templateUrl: 'directives/card-details.html',
+    title: 'Card details'
   });
 
   $urlRouterProvider.otherwise('/');

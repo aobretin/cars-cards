@@ -1,10 +1,10 @@
 <div class="card mb20">
-  <img class="card-img-top" ng-src="{{item.url && item.url.length ? item.url : '/images/no-image.jpg' }}" alt="{{item.maker + ' ' + item.type}}">
+  <img class="card-img-top" ng-src="{{item.url && item.url.length ? item.url : '/images/no-image.jpg'}}" alt="{{item.maker + ' ' + item.type}}">
   <div class="card-block">
     <h4 class="card-title">Maker: {{item.maker}}</h4>
     <h5 class="card-title">Type: {{item.type}}</h5>
     <!-- <p ng-show="description" class="card-text">Description: {{item.description}}</p> -->
-    <a href="#" class="btn btn-primary pull-left">View details</a>
+    <a href="#" ui-sref="CardDetails({id: item.id})" class="btn btn-primary pull-left">View details</a>
     <a ng-click="card.methods.deleteCard(item)" href="#" class="btn btn-danger pull-right">Delete</a>
   </div>
 </div>

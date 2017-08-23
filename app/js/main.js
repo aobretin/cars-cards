@@ -6,6 +6,7 @@ import onConfig  from './on_config';
 import onRun     from './on_run';
 import 'angular-ui-router';
 import 'angular-animate';
+import 'angular-translate';
 import './templates';
 import './filters';
 import './controllers';
@@ -16,6 +17,7 @@ import './directives';
 const requires = [
   'ui.router',
   'ngAnimate',
+  'pascalprecht.translate',
   'templates',
   'app.filters',
   'app.controllers',

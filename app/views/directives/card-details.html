@@ -1,0 +1,16 @@
+<div class="container">
+	<div class="card">
+	  <div class="card-header text-center">
+	    <strong>Details for {{details.vars.card.maker}} - {{details.vars.card.type}}</strong>
+	  </div>
+	  <img class="card-img-top" ng-src="{{details.vars.card.url && details.vars.card.url.length ? details.vars.card.url : '/images/no-image.jpg'}}" alt="Card image cap">
+	  <div class="card-block">
+	    <h3 class="card-title">Sorry for the bad image quality</h3>
+	    <h4 class="card-title"><strong>Maker:</strong> {{details.vars.card.maker}}</h4>
+    	<h5 class="card-title"><strong>Type:</strong> {{details.vars.card.type}}</h5>
+    	<p ng-show="details.vars.card.description" class="card-text"><strong>Description:</strong> {{details.vars.card.description}}</p>
+    	<p ng-show="!details.vars.card.description" class="card-text">No description available</p>
+   		<a ui-sref="List" href="#" class="btn btn-danger">Back</a>
+	  </div>
+	</div>
+</div>

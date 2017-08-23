@@ -30,6 +30,7 @@ function AddCardCtrl($state, AppService) {
 
 			data.unshift(
 				{
+					"id": data.length + 1,
 					"url": '',
 					"maker": vars.formData.maker.value,
 					"type": vars.formData.maker.type,
