@@ -1,6 +1,9 @@
 function AppService($rootScope) {
   'ngInject'
 
+  // we are going to use a service to keep the state of the data and state of the app and
+  // notify where needed about changes
+
   const service = {
     data: [],
     maker: undefined,

@@ -3,9 +3,13 @@ import translations from './translations';
 function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compileProvider, $translateProvider) {
   'ngInject';
 
+  const DEFAULT_LANG = 'en';
+
   if (process.env.NODE_ENV === 'production') {
     $compileProvider.debugInfoEnabled(false);
   }
+
+  // we register dynamically all the languages available in translation.js
 
   Object.keys(translations).forEach(function(language) {
     $translateProvider.translations(language, translations[language]);
@@ -13,7 +17,7 @@ function OnConfig($stateProvider, $locationProvider, $urlRouterProvider, $compil
 
   $translateProvider.registerAvailableLanguageKeys(Object.keys(translations));
 
-  $translateProvider.preferredLanguage('en').fallbackLanguage('en');
+  $translateProvider.preferredLanguage(DEFAULT_LANG).fallbackLanguage(DEFAULT_LANG);
 
   $locationProvider.html5Mode({
     enabled: true,

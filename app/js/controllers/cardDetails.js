@@ -27,8 +27,6 @@ function CardDetailsCtrl($stateParams, $state, AppService, AppSettings) {
 		return foundCard === null ? $state.go('List') : foundCard;
 	}
 
-	console.log(vars.card);
-
 	this.vars = vars;
 	this.methods = methods;
 }

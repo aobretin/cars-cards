@@ -1,6 +1,8 @@
 function ListCtrl($rootScope, $timeout, ApiService, AppService, AppSettings) {
 	'ngInject'
 
+	// original data can be found in constants.js
+
 	const vars = {
 		data: AppService.data,
 		maker: AppService.maker,
